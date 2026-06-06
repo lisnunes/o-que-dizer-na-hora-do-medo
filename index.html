@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Que Dizer na Hora do Medo</title>
+<style>
+:root {
+  --cream:   #fdf9f4;
+  --ink:     #2e2620;
+  --ink-mid: #5e4e44;
+  --ink-soft:#8a7a72;
+  --ink-lt:  #b0a098;
+  --gold:    #c4944a;
+  --gold-lt: #f0e4cc;
+  --gold-bg: #fdf4e3;
+  --l1:      #f5ebe0; --l1b: #d4a882; --l1t: #7a4e2a;
+  --l2:      #e0eaf5; --l2b: #7aa0cc; --l2t: #1a3a62;
+  --l3:      #f0e4f0; --l3b: #c488c4; --l3t: #5a1a6a;
+  --child-bg:#fef3ee; --child-b: #e8c0a8;
+  --parent-bg:#eef5eb; --parent-b: #9ec49a;
+  --nav-h: 68px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Georgia', 'Liberation Serif', serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.8;
+}
+
+/* ─── STICKY NAV ──────────────────────────── */
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: var(--nav-h);
+  background: rgba(253,249,244,0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(196,148,74,.18);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  box-shadow: 0 2px 16px rgba(46,38,32,.08);
+  transition: box-shadow .3s;
+  overflow: hidden; /* prevents buttons from bleeding below bar */
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.nav-brand-moon { font-size: 22px; }
+.nav-brand-text {
+  font-family: 'Georgia', serif;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.2;
+}
+.nav-brand-text span { display: block; font-size: 10px; color: var(--ink-soft); letter-spacing: 1.5px; font-family: sans-serif; }
+
+.nav-sep {
+  width: 1px; height: 32px;
+  background: rgba(196,148,74,.25);
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  align-items: center;
+  height: 100%;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 16px;
+  border-radius: 100px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  font-family: 'Georgia', serif;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+  text-decoration: none;
+  color: var(--ink-mid);
+  height: 38px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.nav-btn:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+.nav-btn.sos  { border-color: var(--gold); color: var(--gold); }
+.nav-btn.sos:hover  { background: var(--gold-bg); }
+.nav-btn.sos.active { background: var(--gold); color: #fff; }
+
+.nav-btn.lv1  { border-color: var(--l1b); color: var(--l1t); }
+.nav-btn.lv1:hover  { background: var(--l1); }
+.nav-btn.lv1.active { background: var(--l1b); color: #fff; }
+
+.nav-btn.lv2  { border-color: var(--l2b); color: var(--l2t); }
+.nav-btn.lv2:hover  { background: var(--l2); }
+.nav-btn.lv2.active { background: var(--l2b); color: #fff; }
+
+.nav-btn.lv3  { border-color: var(--l3b); color: var(--l3t); }
+.nav-btn.lv3:hover  { background: var(--l3); }
+.nav-btn.lv3.active { background: var(--l3b); color: #fff; }
+
+.nav-btn.closing-btn { border-color: #b0a098; color: var(--ink-soft); }
+.nav-btn.closing-btn:hover { background: #f5f0ea; }
+.nav-btn.closing-btn.active { background: var(--ink-soft); color: #fff; }
+
+/* Progress bar */
+.progress-bar {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  height: 3px;
+  z-index: 999;
+  background: rgba(196,148,74,.1);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--l1b), var(--l2b), var(--l3b));
+  width: 0%;
+  transition: width .1s linear;
+}
+
+/* Scenario mini nav */
+.sc-nav {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.sc-nav-btn {
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid;
+  font-family: sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+}
+.sc-nav-btn.s1 { border-color: var(--l1b); color: var(--l1t); background: transparent; }
+.sc-nav-btn.s1:hover { background: var(--l1b); color: #fff; }
+.sc-nav-btn.s2 { border-color: var(--l2b); color: var(--l2t); background: transparent; }
+.sc-nav-btn.s2:hover { background: var(--l2b); color: #fff; }
+.sc-nav-btn.s3 { border-color: var(--l3b); color: var(--l3t); background: transparent; }
+.sc-nav-btn.s3:hover { background: var(--l3b); color: #fff; }
+
+/* ─── COVER ─────────────────────────────── */
+.cover {
+  min-height: 100vh;
+  background: linear-gradient(150deg, #fde8d8 0%, #fef6ee 40%, #ece8f8 75%, #e4f0e4 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: calc(var(--nav-h) + 40px) 32px 60px;
+  position: relative; overflow: hidden;
+}
+.cover::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 45% at 15% 25%, rgba(210,160,120,.15) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 55% at 85% 75%, rgba(160,180,230,.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+.stars { position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none; }
+.stars span {
+  position:absolute; color:var(--gold); opacity:.4; font-size:11px;
+  animation:twinkle 3s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from{opacity:.2;transform:scale(.9);} to{opacity:.6;transform:scale(1.1);} }
+
+.c-moon {
+  font-size:72px; margin-bottom:24px;
+  filter:drop-shadow(0 4px 18px rgba(196,148,74,.3));
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+.c-sup {
+  font-family: sans-serif; font-weight:400; font-size:11px;
+  letter-spacing:4px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px;
+}
+.c-title { font-size:clamp(38px,6vw,72px); font-weight:400; line-height:1.15; color:var(--ink); margin-bottom:6px; }
+.c-title em { font-style:italic; color:var(--ink-mid); }
+
+.c-div { display:flex; align-items:center; gap:14px; margin:26px auto; width:300px; max-width:90%; }
+.c-div-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--gold),transparent); }
+.c-div-star { color:var(--gold); font-size:15px; }
+
+.c-tag { font-style:italic; font-size:17px; color:var(--ink-soft); max-width:400px; margin-bottom:32px; line-height:1.65; }
+
+.c-pills { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; }
+.pill {
+  padding:9px 22px; border-radius:100px;
+  font-family: sans-serif; font-size:11.5px; letter-spacing:.8px; font-weight:600;
+  border:1.5px solid; cursor:pointer; transition: all .25s; text-decoration: none;
+  display: inline-block;
+}
+.pill:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+.p1 { background:var(--l1); border-color:var(--l1b); color:var(--l1t); }
+.p2 { background:var(--l2); border-color:var(--l2b); color:var(--l2t); }
+.p3 { background:var(--l3); border-color:var(--l3b); color:var(--l3t); }
+
+.c-badge {
+  background:rgba(255,255,255,.65); backdrop-filter:blur(8px);
+  border:1px solid rgba(196,148,74,.3); border-radius:16px;
+  padding:18px 30px; max-width:460px; font-size:15px; color:var(--ink-mid); line-height:1.7;
+}
+.c-badge strong { color:var(--ink); }
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(6px);} }
+.scroll-arrow { font-size: 18px; }
+
+/* ─── WRAPPER ────────────────────────────── */
+.wrap { max-width: 800px; margin: 0 auto; padding: 16px 22px 80px; }
+
+/* ─── SECTION ANCHORS ─── offset for fixed nav */
+.section-anchor {
+  display: block;
+  height: calc(var(--nav-h) + 20px);
+  margin-top: calc(-(var(--nav-h) + 20px));
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ─── SOS BOX ────────────────────────────── */
+.sos {
+  background: linear-gradient(135deg,#fff5ee,#fffaf6);
+  border: 2px solid var(--gold); border-radius: 20px;
+  padding: 36px 40px; margin: 48px 0 40px;
+  position: relative; overflow: hidden;
+  transition: box-shadow .3s;
+}
+.sos:hover { box-shadow: 0 8px 40px rgba(196,148,74,.18); }
+.sos::before { content:'🚨'; position:absolute; top:14px; right:22px; font-size:44px; opacity:.12; }
+.sos-label { font-family:sans-serif; font-weight:700; font-size:10px; letter-spacing:3.5px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+.sos-title { font-size:26px; font-weight:400; color:var(--ink); margin-bottom:16px; }
+.sos-steps { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.sos-steps li { display:flex; gap:13px; align-items:flex-start; color:var(--ink-mid); font-size:14px; line-height:1.65; }
+.sos-num { min-width:24px; height:24px; background:var(--gold); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:sans-serif; font-size:11px; font-weight:700; flex-shrink:0; margin-top:2px; }
+.sos-rule { margin-top:20px; padding:14px 20px; background:var(--gold-bg); border-radius:12px; border:1px solid rgba(196,148,74,.3); font-style:italic; font-size:15px; color:var(--ink-mid); text-align:center; }
+
+/* ─── HOW TO USE ─────────────────────────── */
+.how { background:#faf4f0; border:1px solid #e8d0c0; border-radius:20px; padding:36px 40px; margin:32px 0; }
+.sec-label { font-family:sans-serif; font-weight:700; font-size:10px; letter-spacing:3.5px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+.sec-h { font-size:28px; font-weight:400; color:var(--ink); margin-bottom:14px; }
+.how p { color:var(--ink-mid); font-size:14.5px; line-height:1.8; margin-bottom:14px; }
+.how-quote { font-style:italic; font-size:17px; color:var(--ink); text-align:center; padding:18px 24px; background:var(--gold-lt); border-radius:14px; border:1px solid rgba(196,148,74,.25); margin:16px 0; }
+.levels-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px; }
+.lev-card { border-radius:14px; padding:18px 16px; text-align:center; border:1.5px solid; cursor: pointer; transition: all .25s; text-decoration: none; display: block; }
+.lev-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.1); }
+.lev1 { background:var(--l1); border-color:var(--l1b); }
+.lev2 { background:var(--l2); border-color:var(--l2b); }
+.lev3 { background:var(--l3); border-color:var(--l3b); }
+.lev-moons { font-size:16px; margin-bottom:6px; }
+.lev-name { font-weight:700; font-size:13.5px; margin-bottom:4px; }
+.lev1 .lev-name { color:var(--l1t); }
+.lev2 .lev-name { color:var(--l2t); }
+.lev3 .lev-name { color:var(--l3t); }
+.lev-desc { font-style:italic; font-size:12.5px; color:var(--ink-soft); }
+
+/* ─── LEVEL HEADER ───────────────────────── */
+.lev-header {
+  border-radius:20px; margin:52px 0 24px; padding:30px 36px;
+  display:flex; align-items:flex-start; gap:20px;
+  position: relative; overflow: hidden;
+}
+.lh1 { background:linear-gradient(135deg,#fde8d2,#fff5ef); }
+.lh2 { background:linear-gradient(135deg,#d8e8f8,#edf4ff); }
+.lh3 { background:linear-gradient(135deg,#f0daf0,#faeefa); }
+.lev-num-badge { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:68px; height:68px; border-radius:50%; font-family:sans-serif; flex-shrink:0; }
+.lh1 .lev-num-badge { background:var(--l1b); color:#fff; }
+.lh2 .lev-num-badge { background:var(--l2b); color:#fff; }
+.lh3 .lev-num-badge { background:var(--l3b); color:#fff; }
+.lev-moons2 { font-size:18px; line-height:1; }
+.lev-title { font-size:28px; font-weight:400; margin-bottom:6px; }
+.lh1 .lev-title { color:var(--l1t); }
+.lh2 .lev-title { color:var(--l2t); }
+.lh3 .lev-title { color:var(--l3t); }
+.lev-sub { font-style:italic; font-size:14px; color:var(--ink-soft); max-width:440px; line-height:1.6; }
+.lev-quote { font-style:italic; font-size:15.5px; color:var(--ink); text-align:center; padding:16px 22px; background:rgba(255,255,255,.6); border-radius:12px; border:1px dashed rgba(0,0,0,.12); margin-top:12px; }
+.lev-sc-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+.lev-sc-pill {
+  padding:5px 14px; border-radius:100px; border:1.5px solid;
+  font-family:sans-serif; font-size:11px; font-weight:600;
+  cursor:pointer; transition:all .2s; text-decoration:none;
+}
+.lev-sc-pill.s1 { border-color:var(--l1b); color:var(--l1t); }
+.lev-sc-pill.s1:hover { background:var(--l1b); color:#fff; }
+.lev-sc-pill.s2 { border-color:var(--l2b); color:var(--l2t); }
+.lev-sc-pill.s2:hover { background:var(--l2b); color:#fff; }
+.lev-sc-pill.s3 { border-color:var(--l3b); color:var(--l3t); }
+.lev-sc-pill.s3:hover { background:var(--l3b); color:#fff; }
+
+/* ─── SCENARIO CARD ──────────────────────── */
+.sc-card {
+  border-radius:20px; margin-bottom:36px; overflow:hidden;
+  box-shadow:0 2px 20px rgba(46,38,32,.07);
+  transition: box-shadow .3s, transform .3s;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+.sc-card:target, .sc-card.highlight {
+  box-shadow: 0 0 0 3px var(--gold), 0 8px 40px rgba(196,148,74,.2);
+  animation: highlight-pulse .6s ease;
+}
+@keyframes highlight-pulse {
+  0% { box-shadow: 0 0 0 6px rgba(196,148,74,.4), 0 8px 40px rgba(196,148,74,.3); }
+  100% { box-shadow: 0 0 0 3px var(--gold), 0 8px 40px rgba(196,148,74,.2); }
+}
+
+.sc-head { display:flex; align-items:center; gap:0; }
+.sc-badge {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:22px 22px; min-width:100px; text-align:center; flex-shrink:0;
+}
+.sc1 .sc-badge { background:linear-gradient(150deg,var(--l1b),#c89060); color:#fff; }
+.sc2 .sc-badge { background:linear-gradient(150deg,var(--l2b),#5580b0); color:#fff; }
+.sc3 .sc-badge { background:linear-gradient(150deg,var(--l3b),#a060b8); color:#fff; }
+
+.sc-badge-label { font-family:sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; opacity:.85; margin-bottom:2px; }
+.sc-badge-num { font-size:38px; font-weight:300; line-height:1; font-family:Georgia,serif; }
+
+.sc-title-area { flex:1; padding:20px 24px 20px 16px; border-left:1px solid rgba(255,255,255,.35); }
+.sc1 .sc-head { background:linear-gradient(to right,var(--l1b),var(--l1),#fff9f5); }
+.sc2 .sc-head { background:linear-gradient(to right,var(--l2b),var(--l2),#f4f8ff); }
+.sc3 .sc-head { background:linear-gradient(to right,var(--l3b),var(--l3),#fdf4ff); }
+
+.sc-scenario { font-family:sans-serif; font-size:10px; letter-spacing:2.5px; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
+.sc1 .sc-scenario { color:var(--l1t); }
+.sc2 .sc-scenario { color:var(--l2t); }
+.sc3 .sc-scenario { color:var(--l3t); }
+.sc-title { font-size:22px; font-weight:400; line-height:1.25; color:var(--ink); }
+.sc-subtitle { font-style:italic; font-size:12.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+
+.sc-body { background:#fff; padding:30px 34px; display:flex; flex-direction:column; gap:22px; }
+
+/* Dialogue */
+.dialogue { display:flex; flex-direction:column; gap:8px; }
+.bubble-row { display:flex; align-items:flex-end; gap:10px; }
+.bubble-row.child { flex-direction:row; }
+.bubble-row.parent { flex-direction:row-reverse; }
+.avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; margin-bottom:2px; }
+.av-child { background:var(--child-b); }
+.av-parent { background:var(--parent-b); }
+.bubble { padding:11px 16px; border-radius:16px; max-width:78%; font-size:14px; line-height:1.7; position:relative; }
+.bubble.child { background:var(--child-bg); border:1px solid var(--child-b); border-bottom-left-radius:4px; color:var(--ink); }
+.bubble.parent { background:var(--parent-bg); border:1px solid var(--parent-b); border-bottom-right-radius:4px; color:var(--ink); font-style:italic; }
+.speaker-label { font-family:sans-serif; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:2px; padding:0 6px; }
+.sl-child { color:var(--l1t); text-align:left; }
+.sl-parent { color:#2a6a2a; text-align:right; }
+.narr { text-align:center; font-style:italic; font-size:13px; color:var(--ink-soft); padding:8px 0; border-top:1px dashed #e8e0d8; border-bottom:1px dashed #e8e0d8; }
+
+/* Avoid box */
+.avoid { background:#fff8f6; border:1px solid #f0c0b0; border-radius:14px; padding:18px 22px; }
+.avoid-label { font-family:sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#c44a2a; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.avoid-item { display:flex; gap:10px; align-items:flex-start; color:var(--ink-mid); font-size:13.5px; line-height:1.65; margin-bottom:6px; }
+.avoid-item:last-child { margin-bottom:0; }
+.avoid-x { color:#c44a2a; font-weight:700; flex-shrink:0; margin-top:1px; }
+
+/* Light box */
+.luz { border-radius:14px; padding:18px 22px; border:1px solid; display:flex; gap:14px; align-items:flex-start; }
+.sc1 .luz { background:var(--l1); border-color:var(--l1b); }
+.sc2 .luz { background:var(--l2); border-color:var(--l2b); }
+.sc3 .luz { background:var(--l3); border-color:var(--l3b); }
+.luz-icon { font-size:20px; flex-shrink:0; }
+.luz-text { font-size:13.5px; line-height:1.7; color:var(--ink-mid); }
+.luz-text strong { color:var(--ink); }
+
+/* What this does */
+.what { background:#f8f8f5; border:1px solid #e8e4dc; border-radius:14px; padding:18px 22px; display:flex; gap:14px; align-items:flex-start; }
+.what-star { font-size:18px; flex-shrink:0; margin-top:1px; }
+.what-text { font-size:13.5px; color:var(--ink-mid); line-height:1.7; }
+.what-text strong { color:var(--ink); }
+
+/* Tip box */
+.tip { background:var(--gold-bg); border:1px solid rgba(196,148,74,.35); border-radius:14px; padding:18px 22px; display:flex; gap:14px; align-items:flex-start; }
+.tip-icon { font-size:20px; flex-shrink:0; }
+.tip-text { font-size:13.5px; color:var(--ink-mid); line-height:1.7; }
+
+/* ─── COLLAPSIBLE ────────────────────────── */
+.sc-body-toggle {
+  display: none;
+}
+.sc-head-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.sc-expand-icon {
+  margin-left: auto;
+  padding-right: 20px;
+  font-size: 18px;
+  color: var(--ink-soft);
+  transition: transform .3s;
+  flex-shrink: 0;
+}
+.sc-card.open .sc-expand-icon { transform: rotate(180deg); }
+.sc-card.open .sc-body { display: flex; }
+.sc-card:not(.open) .sc-body { display: none; }
+.sc-card { cursor: default; }
+
+/* ─── CLOSING ─────────────────────────────── */
+.closing {
+  background:linear-gradient(150deg,#fde8d8 0%,#fef6ee 40%,#ece8f8 80%,#e4f0e4 100%);
+  border-radius:22px; padding:56px 44px; text-align:center; margin-top:52px;
+  position:relative; overflow:hidden; scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+.closing::before { content:'🌙'; position:absolute; bottom:-10px; right:-10px; font-size:130px; opacity:.06; }
+.cl-title { font-size:34px; font-weight:400; color:var(--ink); margin-bottom:18px; }
+.cl-text { font-size:14.5px; color:var(--ink-mid); max-width:500px; margin:0 auto 22px; line-height:1.9; }
+.cl-quote { font-style:italic; font-size:19px; color:var(--ink); max-width:440px; margin:0 auto 24px; padding:22px 28px; background:rgba(255,255,255,.55); border-radius:16px; border:1px solid rgba(196,148,74,.25); line-height:1.7; }
+.cl-verse { margin:22px auto; max-width:400px; padding:18px 24px; background:var(--gold-lt); border-radius:14px; border:1px solid rgba(196,148,74,.4); font-style:italic; font-size:16px; color:var(--ink-mid); line-height:1.7; }
+.cl-mantra { margin:24px auto 0; max-width:380px; padding:22px 28px; background:rgba(255,255,255,.6); border-radius:16px; border:1px solid rgba(196,148,74,.22); }
+.cl-mantra-title { font-weight:700; font-size:14px; color:var(--ink); margin-bottom:8px; }
+.cl-mantra-text { font-style:italic; font-size:16px; color:var(--ink-mid); line-height:1.7; }
+
+.footer { text-align:center; padding:36px 20px 22px; font-size:11.5px; color:var(--ink-lt); letter-spacing:.8px; }
+
+/* Back to top */
+.back-top {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(196,148,74,.4);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(12px);
+  transition: all .3s;
+  z-index: 999;
+}
+.back-top.visible { opacity: 1; transform: translateY(0); }
+.back-top:hover { background: #b07830; transform: translateY(-2px) scale(1.05); }
+
+@media(max-width:580px){
+  .levels-row { grid-template-columns:1fr; }
+  .lev-header { flex-direction:column; }
+  .sc-body { padding:20px 16px; }
+  .bubble { max-width:88%; }
+  .wrap { padding:10px 12px 60px; }
+  .top-nav { padding: 0 12px; gap: 8px; }
+  .nav-btn { padding: 6px 10px; font-size: 11.5px; }
+  .nav-brand-text { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- FIXED NAV -->
+<nav class="top-nav">
+  <a class="nav-brand" onclick="scrollToTop()">
+    <span class="nav-brand-moon">🌙</span>
+    <div class="nav-brand-text">
+      O Que Dizer<br>
+      <span>na Hora do Medo</span>
+    </div>
+  </a>
+  <div class="nav-sep"></div>
+  <div class="nav-links">
+    <a class="nav-btn sos" onclick="navTo('sec-sos')">🚨 Socorro</a>
+    <a class="nav-btn lv1" onclick="navTo('sec-nivel1')">🌙 Nível 1</a>
+    <a class="nav-btn lv2" onclick="navTo('sec-nivel2')">🌙🌙 Nível 2</a>
+    <a class="nav-btn lv3" onclick="navTo('sec-nivel3')">🌙🌙🌙 Nível 3</a>
+    <a class="nav-btn closing-btn" onclick="navTo('sec-closing')">❤️ Para Você</a>
+  </div>
+</nav>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="scrollToTop()" title="Voltar ao topo">↑</button>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div class="stars" aria-hidden="true">
+    <span style="top:6%;left:10%;animation-delay:0s">✦</span>
+    <span style="top:12%;left:72%;animation-delay:1.3s">⋆</span>
+    <span style="top:20%;left:40%;animation-delay:.6s">✦</span>
+    <span style="top:30%;left:88%;animation-delay:2.1s">⋆</span>
+    <span style="top:50%;left:5%;animation-delay:1.7s">✦</span>
+    <span style="top:62%;left:55%;animation-delay:.9s">⋆</span>
+    <span style="top:78%;left:28%;animation-delay:2.4s">✦</span>
+    <span style="top:86%;left:82%;animation-delay:.4s">⋆</span>
+    <span style="top:8%;left:52%;animation-delay:3s">✦</span>
+    <span style="top:44%;left:18%;animation-delay:1.1s">⋆</span>
+    <span style="top:70%;left:90%;animation-delay:1.6s">✦</span>
+    <span style="top:92%;left:46%;animation-delay:2s">⋆</span>
+  </div>
+  <div class="c-moon">🌙</div>
+  <div class="c-sup">Método da Luz Interior</div>
+  <h1 class="c-title">O Que Dizer na<br><em>Hora do Medo</em></h1>
+  <div class="c-div"><div class="c-div-line"></div><span class="c-div-star">✦</span><div class="c-div-line"></div></div>
+  <p class="c-tag">Um guia prático para pais do Método da Luz Interior</p>
+  <div class="c-pills">
+    <a class="pill p1" onclick="navTo('sec-nivel1')">🌙 Nível 1 · Insegurança Leve</a>
+    <a class="pill p2" onclick="navTo('sec-nivel2')">🌙🌙 Nível 2 · Medo Imaginário</a>
+    <a class="pill p3" onclick="navTo('sec-nivel3')">🌙🌙🌙 Nível 3 · Medo Emocional Forte</a>
+  </div>
+  <div class="c-badge">
+    <strong>12 cenários reais. Falas prontas. Para usar agora.</strong><br>
+    Diálogos com a linguagem real do medo infantil — palavra por palavra.
+  </div>
+  <div class="cover-scroll-hint">
+    <span class="scroll-arrow">↓</span>
+    <span>role para começar</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+
+  <!-- SOS -->
+  <span id="sec-sos" class="section-anchor"></span>
+  <div class="sos">
+    <div class="sos-label">Socorro Imediato</div>
+    <div class="sos-title">Seu filho está com medo agora?</div>
+    <ul class="sos-steps">
+      <li><span class="sos-num">1</span> Abra no cenário mais parecido com o que está acontecendo.</li>
+      <li><span class="sos-num">2</span> Leia o diálogo modelo com calma antes de entrar no quarto.</li>
+      <li><span class="sos-num">3</span> Adapte com as suas palavras — o espírito importa mais do que o script.</li>
+      <li><span class="sos-num">4</span> Use a Luz Interior: "Como está sua luz agora? Vamos deixar ela mais forte?"</li>
+    </ul>
+    <div class="sos-rule">Regra de ouro: <strong>presença primeiro. Respiração depois. Palavras por último.</strong></div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="how">
+    <div class="sec-label">Orientações</div>
+    <div class="sec-h">Como Usar Este Guia</div>
+    <p>Você está exausto. São 2h da manhã e seu filho está chamando de novo. Você quer ajudar — mas as palavras não vêm. Este guia existe para esses momentos. Não é teórico. É uma ferramenta — para abrir, usar, e fechar.</p>
+    <div class="how-quote">"O medo cresce no silêncio. A coragem cresce na conexão."</div>
+    <div class="levels-row">
+      <a class="lev-card lev1" onclick="navTo('sec-nivel1')">
+        <div class="lev-moons">🌙</div>
+        <div class="lev-name">Nível 1</div>
+        <div class="lev-desc">Insegurança Leve<br>"Fica aqui comigo"</div>
+      </a>
+      <a class="lev-card lev2" onclick="navTo('sec-nivel2')">
+        <div class="lev-moons">🌙🌙</div>
+        <div class="lev-name">Nível 2</div>
+        <div class="lev-desc">Medo Imaginário<br>"Tem um monstro!"</div>
+      </a>
+      <a class="lev-card lev3" onclick="navTo('sec-nivel3')">
+        <div class="lev-moons">🌙🌙🌙</div>
+        <div class="lev-name">Nível 3</div>
+        <div class="lev-desc">Medo Emocional Forte<br>"Não consigo parar"</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══ NÍVEL 1 ════ -->
+  <span id="sec-nivel1" class="section-anchor"></span>
+  <div class="lev-header lh1">
+    <div class="lev-num-badge"><div class="lev-moons2">🌙</div></div>
+    <div style="flex:1;">
+      <div class="lev-title">Insegurança Leve</div>
+      <div class="lev-sub">A criança não quer ficar sozinha, procrastina na hora de dormir, pede a luz acesa. O medo existe, mas ainda é manejável.</div>
+      <div class="lev-quote">"Antes da criança se acalmar, ela precisa se sentir acolhida."</div>
+      <div class="lev-sc-pills">
+        <a class="lev-sc-pill s1" onclick="goToScenario('sc1')">Cenário 1</a>
+        <a class="lev-sc-pill s1" onclick="goToScenario('sc2')">Cenário 2</a>
+        <a class="lev-sc-pill s1" onclick="goToScenario('sc3')">Cenário 3</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cenário 1 -->
+  <div class="sc-card sc1 open" id="sc1">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc1')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">1</div></div>
+      <div class="sc-title-area">
+        <div class="sc-scenario">Nível 1</div>
+        <div class="sc-title">"Não quero dormir sozinho"</div>
+        <div class="sc-subtitle">Clássico. Toda noite, o mesmo pedido. Você já está cedendo por cansaço — mas sabe que não é o certo.</div>
+      </div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe... eu não quero ficar sozinho.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei, amor.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Fica aqui comigo?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Fica assim: vou te levar até lá e a gente faz a oração juntos. Depois eu fico uns minutinhos.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mas e depois que você for?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Sabe quem fica? O seu anjo. Ele não sai. Como tá a sua luz agora?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...pequena.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Vamos deixar ela mais forte? Respira comigo: inspira... e solta. Mais uma vez. Sentiu?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[acena devagar com a cabeça]</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">"A luz de Deus está acesa dentro de mim. Amém." Boa noite, meu valente.</div></div></div>
+      </div>
+      <div class="avoid"><div class="avoid-label">❌ Evite dizer</div><div class="avoid-item"><span class="avoid-x">✗</span> "Você é grande, para de frescura." — envergonha sem resolver.</div><div class="avoid-item"><span class="avoid-x">✗</span> Ceder toda noite sem conversar — ensina que o quarto não é seguro.</div></div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> Pergunte sempre: "Como tá sua luz agora?" Isso ancora a criança no método e dá a ela uma linguagem para o que sente por dentro.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Oferecer presença temporária e depois transição gradual preserva a segurança sem criar dependência. A pergunta da luz transforma o medo em ação.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 2 -->
+  <div class="sc-card sc1 open" id="sc2">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc2')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">2</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 1</div><div class="sc-title">"Dormir no escuro é assustador"</div><div class="sc-subtitle">Ele não sabe exatamente o que teme. Só sabe que o escuro dá medo.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe, eu não gosto do escuro.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei. O escuro pode ser esquisito.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">E se tiver alguma coisa lá?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Aí vem a parte legal: você tem um anjo que vê no escuro melhor do que no claro. Para ele, o escuro é tão fácil quanto o dia.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Sério?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Sério. Olha: vou acender a lanterna. [acende] Viu? A luz é maior do que o escuro. E a sua luz interior é assim também. Vamos dizer o Mantra juntos?</div></div></div>
+        <div class="narr">[ pai e filho recitam o Mantra da Luz ]</div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Luz acesa. Pode dormir.</div></div></div>
+      </div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> A Lanterna da Fé é uma ferramenta real para este cenário: mostrar que a luz vence o escuro e conectar isso à luz interior da criança.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Responder com curiosidade ("a parte legal") ao invés de lógica ("não tem nada") mantém a criança engajada. O Mantra encerra e ancora.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 3 -->
+  <div class="sc-card sc1 open" id="sc3">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc3')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">3</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 1</div><div class="sc-title">"Não consigo fechar os olhos"</div><div class="sc-subtitle">Ela deita, fecha os olhos... e abre de novo. O cérebro está acelerado.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe, eu fecho e fico abrindo de novo. Eu não consigo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei como é isso. A cabeça fica girando, né?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Fica. Fica pensando em coisa.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Então a gente vai enganar a cabeça. Fecha os olhos e fica procurando a sua luz interior. Onde ela está agora?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[fecha os olhos] ...no peito?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. Agora vê se dá pra deixar ela um pouquinho maior. Inspira... e solta.</div></div></div>
+        <div class="narr">[ silêncio ]</div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[respira mais devagar]</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[sussurra] "A luz de Deus está acesa dentro de mim." Foca nela. Ela vai te levar pro sono.</div></div></div>
+      </div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> "Onde está sua luz agora?" redireciona a atenção do medo para dentro. É uma técnica de aterramento que usa a linguagem do próprio método.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> A criança que não consegue dormir não está resistindo — está com o sistema nervoso ativado. Respiração guiada + foco interno é mais eficaz do que qualquer argumento.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ NÍVEL 2 ════ -->
+  <span id="sec-nivel2" class="section-anchor"></span>
+  <div class="lev-header lh2">
+    <div class="lev-num-badge"><div class="lev-moons2">🌙🌙</div></div>
+    <div style="flex:1;">
+      <div class="lev-title">Medo Imaginário</div>
+      <div class="lev-sub">Monstros, sombras, barulhos, figuras. A imaginação está no comando. Para a criança, é completamente real.</div>
+      <div class="lev-quote">"Para o cérebro da criança, o monstro é tão real quanto você. Não briga com o medo. Entra nele e mostra a saída."</div>
+      <div class="lev-sc-pills">
+        <a class="lev-sc-pill s2" onclick="goToScenario('sc4')">Cenário 4</a>
+        <a class="lev-sc-pill s2" onclick="goToScenario('sc5')">Cenário 5</a>
+        <a class="lev-sc-pill s2" onclick="goToScenario('sc6')">Cenário 6</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cenário 4 -->
+  <div class="sc-card sc2 open" id="sc4">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc4')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">4</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 2</div><div class="sc-title">"Tem um monstro me olhando"</div><div class="sc-subtitle">Ela está convicta. Os olhos arregalados. A voz tremendo. Para ela, existe.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe! Tem um monstro olhando pra mim!</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[entra calmo, senta na cama] Onde?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Ali! No canto! Você não tá vendo?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Vou ver. [vai até o canto, olha com a lanterna] Aqui ó: é a sombra do brinquedo na prateleira. Olha quando eu movimento. [move o brinquedo, a sombra muda]</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[olha, surpreso] Ah...</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">E mesmo que tivesse algo — o que protege esse quarto?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...o anjo?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. Seu anjo tá de plantão. Ele vê no escuro. Nada passa por ele. Como tá a sua luz?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Pequena ainda.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Vamos respirar e deixar ela crescer. Inspira... solta. Mais uma. Agora: "A luz de Deus está acesa dentro de mim. Amém."</div></div></div>
+      </div>
+      <div class="avoid"><div class="avoid-label">❌ Evite dizer</div><div class="avoid-item"><span class="avoid-x">✗</span> "Monstro não existe." — verdade, mas ineficaz. Não acalma.</div><div class="avoid-item"><span class="avoid-x">✗</span> "Para de bobagem!" — invalida o sentimento real da criança.</div><div class="avoid-item"><span class="avoid-x">✗</span> Ignorar e mandar dormir — o medo vai crescer no silêncio.</div></div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> Depois de investigar juntos, sempre retorne à Luz Interior: "Como está sua luz agora? Vamos deixar ela mais forte?"</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Investigar junto (em vez de negar) tira a criança da passividade do medo. Quando ela descobre a explicação, o cérebro registra: "investigei e estou bem". Isso cria confiança para as próximas noites.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 5 -->
+  <div class="sc-card sc2 open" id="sc5">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc5')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">5</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 2</div><div class="sc-title">"A sombra tá me olhando"</div><div class="sc-subtitle">Diferente do monstro, a sombra é real e visível. A criança aponta. Está lá na parede. E se move.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe... aquela sombra na parede. Tá se mexendo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Vem, a gente vai ver de perto. [pega a mão da criança, vai até a parede] Olha: quando eu passo a mão aqui... o que acontece?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">A sombra da sua mão aparece.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. Sombra é a luz brincando na parede. Ela não tem sentimento, não tem olho, não te olha. É só luz.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mas parece que olha.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei que parece. Mas agora você já sabe o que é. Respira e sente sua luz.</div></div></div>
+      </div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> Conectar o cenário a uma história do método fortalece o aprendizado e lembra à criança que ela já tem ferramentas.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Ir até a sombra e interagir com ela desfaz o medo com experiência direta — muito mais poderoso do que explicar. A criança que tocou a parede não tem mais dúvida.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 6 -->
+  <div class="sc-card sc2 open" id="sc6">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc6')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">6</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 2</div><div class="sc-title">"Eu ouvi um barulho"</div><div class="sc-subtitle">Um estralo, um rangido, um som diferente. O barulho despertou a imaginação.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Pai! Eu ouvi um barulho lá fora! Tipo um batido. Você não ouviu?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[fica quieto por 3 segundos, ouvindo] Hmm. Eu acho que foi a casa se acomodando. Sabe que a casa faz isso à noite? Fica mais fria e range um pouco.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Sério? A casa range?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. É normal. Mas olha: mesmo que fosse outro barulho, você sabe o que tá de plantão aqui, né?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">O anjo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. E o anjo não dorme, não. Ele tá ouvindo também. Como tá a sua luz?</div></div></div>
+      </div>
+      <div class="tip"><span class="tip-icon">🔎</span><div class="tip-text">Ficar quieto por alguns segundos ouvindo junto à criança é poderoso: mostra que você levou a sério e investigou. Depois, a explicação entra com mais autoridade.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> O cérebro interpreta barulhos desconhecidos como ameaças. Dar uma explicação concreta ("a casa range") e depois ancorar no anjo é a combinação certa: lógica + espiritualidade.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ NÍVEL 3 ════ -->
+  <span id="sec-nivel3" class="section-anchor"></span>
+  <div class="lev-header lh3">
+    <div class="lev-num-badge"><div class="lev-moons2">🌙🌙🌙</div></div>
+    <div style="flex:1;">
+      <div class="lev-title">Medo Emocional Forte</div>
+      <div class="lev-sub">Pesadelo, choro intenso, pânico. O corpo está ativado. A razão não chega primeiro — o acolhimento sim.</div>
+      <div class="lev-quote">"Quando a criança chora de medo às 3h da manhã, ela não precisa de uma lição. Precisa de um colo."</div>
+      <div class="lev-sc-pills">
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc7')">Cenário 7</a>
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc8')">Cenário 8</a>
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc9')">Cenário 9</a>
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc10')">Cenário 10</a>
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc11')">Cenário 11</a>
+        <a class="lev-sc-pill s3" onclick="goToScenario('sc12')">Cenário 12</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cenário 7 -->
+  <div class="sc-card sc3 open" id="sc7">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc7')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">7</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3</div><div class="sc-title">"Tive um sonho ruim"</div><div class="sc-subtitle">Ela acordou. O pesadelo ainda está vivo. Olhos arregalados, coração acelerado.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[chorando] Mamãe! Eu tive um sonho horrível!</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[abraça sem falar nada por alguns segundos]</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[chorando] Tinha uma coisa me perseguindo...</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Caramba. Deve ter assustado muito.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Assustou! Eu não quero dormir de novo!</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu entendo. Sonho ruim dói mesmo. Mas sabe o que ele era? Só um filme que a sua cabeça inventou. Acabou quando você abriu os olhos.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[soluçando] Mas parecia tão real...</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Parecia mesmo. Me fala uma coisa boa que aconteceu hoje. Qualquer coisa.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...a gente foi no parque.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso! Fica nessa imagem. O parque. O sol. Você correndo. Agora: respira e sente sua luz. Onde ela está?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[pausa] ...aqui no peito.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Ela nunca foi embora. Nem no sonho. Vamos fechar com o Selo? "A luz de Deus está acesa dentro de mim. Amém."</div></div></div>
+      </div>
+      <div class="avoid"><div class="avoid-label">❌ Evite dizer</div><div class="avoid-item"><span class="avoid-x">✗</span> "Foi só um sonho, não é nada." — minimiza antes de acolher.</div><div class="avoid-item"><span class="avoid-x">✗</span> Tentar explicar o sonho enquanto ela ainda está chorando — o cérebro não processa lógica no pico emocional.</div></div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> "Onde está sua luz?" após um pesadelo reancora a criança: mostra que a Luz Interior sobreviveu ao sonho ruim.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Abraçar primeiro, perguntar depois. Só depois que o choro diminui é que o cérebro consegue receber informação. A técnica da "imagem boa" sobrescreve o pesadelo na memória de curto prazo.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 8 -->
+  <div class="sc-card sc3 open" id="sc8">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc8')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">8</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3</div><div class="sc-title">"Não sai do quarto"</div><div class="sc-subtitle">Ele não chora. Não grita. Só para na porta do seu quarto, com o olhar perdido. Esse silêncio é tão pesado quanto o choro.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="narr">[ você sente uma presença na porta — seu filho está parado lá, no escuro, te olhando ]</div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Ei. Vem cá. [abre os braços]</div></div></div>
+        <div class="narr">[ ele entra e abraça sem falar nada ]</div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[fica em silêncio por um momento] O que aconteceu?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[muito baixo] Não sei. Eu só fiquei com medo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Tá bom. Não precisa saber por quê. Eu vim.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Posso ficar aqui um pouco?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Pode. [fica um momento] Vamos respirar juntos? [respiram] Como tá a sua luz agora?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...melhorzinha.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. Ela estava lá o tempo todo. Vou te levar de volta com ela. A gente faz o Selo e você dorme.</div></div></div>
+      </div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Crianças que param na porta sem conseguir explicar o medo estão em estado de congelamento — o sistema nervoso paralisou. Menos palavras, mais presença física. Não force explicações neste momento.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 9 -->
+  <div class="sc-card sc3 open" id="sc9">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc9')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">9</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3</div><div class="sc-title">"E se algo acontecer?"</div><div class="sc-subtitle">Ela não está com medo de monstro. Está com medo de perder você. Ansiedade antecipatória.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe... e se você morrer enquanto eu dormir?</div></div></div>
+        <div class="narr">[ pausa. Esse é um dos momentos mais delicados da parentalidade ]</div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[fica quieto um segundo, respira] Que pergunta importante. Você pensou muito nisso?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Fico pensando. Tenho medo de acordar e você não estar aqui.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu entendo. Esse medo é amor, sabia? Você me ama tanto que tem medo de me perder.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[para de chorar um pouco]</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">E sabe o que eu posso te prometer? Que enquanto Deus quiser, eu vou estar aqui. E mesmo nos momentos que eu não puder estar — Ele vai. Deus nunca sai. Como tá sua luz?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...tá aqui.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Essa luz é Deus dentro de você. Ela não vai a lugar nenhum, mesmo que tudo mude. "A luz de Deus está acesa dentro de mim." Pode dormir.</div></div></div>
+      </div>
+      <div class="tip"><span class="tip-icon">🔎</span><div class="tip-text">Não prometa "eu nunca vou morrer". Além de falso, fragiliza a confiança quando a criança perceber. Prometa presença enquanto está aqui, e aponte Deus como a presença permanente.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Renomear o medo como amor ("você me ama tanto") não minimiza — ressignifica. Isso abre espaço para a resposta espiritual entrar.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 10 -->
+  <div class="sc-card sc3 open" id="sc10">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc10')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">10</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3</div><div class="sc-title">"Nem Deus resolve"</div><div class="sc-subtitle">Ele já orou. Já fez o ritual. E ainda está com medo. E agora fala isso para você.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Pai, eu orei e ainda tô com medo. Não funcionou.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Que bom que me falou. Isso é uma pergunta importante de verdade.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mas se eu orei, por que ainda tenho medo?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Sabe o Davi? Ele orava e ainda tinha lobo em volta. A oração não tirou o lobo. Mas Deus ficou do lado.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">...mas eu ainda tô sentindo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei. O medo passa devagar. Mas a Luz Interior já tá acesa — você só não tá sentindo ainda. Onde ela tá?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[pausa, mão no peito] ...aqui.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Ela não foi embora. Vamos respirar e deixar ela aparecer mais? [respiram juntos]</div></div></div>
+      </div>
+      <div class="avoid"><div class="avoid-label">❌ Evite dizer</div><div class="avoid-item"><span class="avoid-x">✗</span> "Você não acreditou direito." — coloca culpa na fé da criança.</div><div class="avoid-item"><span class="avoid-x">✗</span> "Deus sempre resolve, você tá errado." — nega a experiência real dela.</div></div>
+      <div class="luz"><span class="luz-icon">🌙</span><div class="luz-text"><strong>Luz Interior —</strong> Este é o cenário mais poderoso para usar "Como está sua luz?" A criança que encontra a luz mesmo no pico do medo experimenta o método na prática.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Fé honesta é mais forte do que fé perfeita. Reconhecer que o medo continua mas Deus está lá constrói uma espiritualidade real e duradoura.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 11 -->
+  <div class="sc-card sc3 open" id="sc11">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc11')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">11</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3</div><div class="sc-title">"O medo voltou depois de dias bons"</div><div class="sc-subtitle">Seu filho estava indo bem. E de repente voltou. Você sente que o método falhou. Não falhou.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Mamãe... eu tô com medo de novo. Mas eu já não tinha...</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Eu sei, amor. O medo visitou de novo.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">Visitou?</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Isso. Às vezes ele volta pra ver se você ainda tem o que precisa. E tem. Olha: sete estrelas. Você fez tudo isso.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[olha o diário] É mesmo.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Esse medo de hoje é menor do que os que você já venceu. Qual foi a noite que você mais gostou?</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">A do Daniel.</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">Então a gente repete essa. E termina com o Selo. Pode ser?</div></div></div>
+      </div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> Regressão é normal e previsível. Tratar como "visita" (não fracasso) preserva a autoconfiança da criança e dá ao pai um enquadramento gentil para a situação.</div></div>
+    </div>
+  </div>
+
+  <!-- Cenário 12 -->
+  <div class="sc-card sc3 open" id="sc12">
+    <button class="sc-head sc-head-btn" onclick="toggleCard('sc12')">
+      <div class="sc-badge"><div class="sc-badge-label">Cenário</div><div class="sc-badge-num">12</div></div>
+      <div class="sc-title-area"><div class="sc-scenario">Nível 3 · Para os Pais</div><div class="sc-title">"Quando você está no limite"</div><div class="sc-subtitle">São 3h da manhã. É a quarta noite. Você tem reunião cedo. Esse cenário é para você.</div></div>
+      <span class="sc-expand-icon">⌄</span>
+    </button>
+    <div class="sc-body">
+      <div class="avoid" style="background:#fff8f0;border-color:#e8c080;">
+        <div class="avoid-label" style="color:#a06020;">Antes de entrar no quarto</div>
+        <div class="avoid-item" style="color:var(--ink-mid);"><span style="color:var(--gold);font-weight:700;">→</span> Respire fundo 3 vezes do lado de fora da porta.</div>
+        <div class="avoid-item" style="color:var(--ink-mid);"><span style="color:var(--gold);font-weight:700;">→</span> Diga baixinho: "Eu posso fazer isso. Deus me ajuda."</div>
+        <div class="avoid-item" style="color:var(--ink-mid);"><span style="color:var(--gold);font-weight:700;">→</span> Lembre: seu filho não é o problema. O medo é o problema.</div>
+        <div class="avoid-item" style="color:var(--ink-mid);"><span style="color:var(--gold);font-weight:700;">→</span> Entre com o rosto o mais calmo possível.</div>
+      </div>
+      <div class="dialogue">
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[chora ou chama]</div></div></div>
+        <div class="narr">[ você respira 3 vezes antes de entrar ]</div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[entra, senta, mão no ombro] Estou aqui. Mamãe está cansada hoje — mas vim porque te amo.</div></div></div>
+        <div class="bubble-row child"><div class="avatar av-child">👶</div><div><div class="speaker-label sl-child">Filho</div><div class="bubble child">[acalma um pouco só com a presença]</div></div></div>
+        <div class="bubble-row parent"><div class="avatar av-parent">🗣️</div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="speaker-label sl-parent">Pai / Mãe</div><div class="bubble parent">[sussurra] Respira comigo. [respiram 3 vezes] "A luz de Deus está acesa dentro de mim. Amém." Boa noite, meu amor.</div></div></div>
+        <div class="narr">[ sai com calma, mesmo exausto ]</div>
+      </div>
+      <div class="tip"><span class="tip-icon">🔎</span><div class="tip-text">A honestidade gentil ("estou cansada, mas vim") modela integridade emocional para a criança. Ela aprende que amor é aparecer mesmo quando é difícil.</div></div>
+      <div class="what"><span class="what-star">🌟</span><div class="what-text"><strong>O que essa resposta faz:</strong> A regulação emocional da criança depende da regulação do adulto. Um pai calmo — mesmo exausto — transmite segurança pelo tom de voz e pelo toque. <strong>3 minutos são suficientes.</strong></div></div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <span id="sec-closing" class="section-anchor"></span>
+  <div class="closing">
+    <div class="c-moon" style="font-size:52px;margin-bottom:18px;">🌙</div>
+    <h2 class="cl-title">Uma Palavra para Você, Pai ou Mãe</h2>
+    <p class="cl-text">Você chegou até aqui. E isso já diz muito sobre quem você é. Nenhum pai tem todas as respostas. Nenhuma fala sai perfeita toda noite. Tem noite que você vai errar. Vai falar a coisa errada, no tom errado, na hora errada.</p>
+    <p class="cl-text">Mas sabe o que o seu filho vai lembrar quando crescer?</p>
+    <div class="cl-quote">"Não vai lembrar das palavras perfeitas. Vai lembrar que você apareceu."</div>
+    <p class="cl-text">Cada vez que você se levanta no meio da noite, cansado mas presente, está plantando algo que não dá para comprar: segurança emocional. Fé com raiz. Amor que aparece.</p>
+    <div class="cl-verse">📜 Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus.<br><strong>— Isaías 41:10</strong></div>
+    <p class="cl-text">Esse versículo não é só para o seu filho. É para você também. Deus está no quarto com você dois. Você não é o único cuidando.</p>
+    <div class="cl-mantra">
+      <div class="cl-mantra-title">O mantra vale para você também.</div>
+      <div class="cl-mantra-text">"Luz acesa por fora, calma.<br>Luz acesa por dentro, fé."<br><br>Você está fazendo um trabalho lindo.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">O Que Dizer na Hora do Medo · Método da Luz Interior · Feito com amor para famílias que escolhem criar seus filhos na fé 🌙❤️</div>
+
+<script>
+// ─── SMOOTH SCROLL TO SECTION ──────────────────────
+function navTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateNav(id);
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── GO TO SCENARIO: open + scroll ─────────────────
+function goToScenario(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  if (!card.classList.contains('open')) {
+    card.classList.add('open');
+  }
+  setTimeout(() => {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    card.classList.add('highlight');
+    setTimeout(() => card.classList.remove('highlight'), 1200);
+  }, 50);
+}
+
+// ─── TOGGLE CARD ────────────────────────────────────
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.classList.toggle('open');
+}
+
+// ─── PROGRESS BAR ───────────────────────────────────
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ─── BACK TO TOP VISIBILITY ─────────────────────────
+function updateBackTop() {
+  const btn = document.getElementById('backTop');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+}
+
+// ─── NAV ACTIVE STATE ───────────────────────────────
+const sectionMap = {
+  'sec-sos':    'sos',
+  'sec-nivel1': 'lv1',
+  'sec-nivel2': 'lv2',
+  'sec-nivel3': 'lv3',
+  'sec-closing':'closing-btn'
+};
+
+function updateNav(activeId) {
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  if (activeId && sectionMap[activeId]) {
+    document.querySelector('.' + sectionMap[activeId])?.classList.add('active');
+  }
+}
+
+function detectActiveSection() {
+  const navH = 68 + 30;
+  const sections = Object.keys(sectionMap);
+  let active = null;
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const rect = el.getBoundingClientRect();
+    if (rect.top <= navH + 60) active = id;
+  }
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  if (active && sectionMap[active]) {
+    document.querySelector('.' + sectionMap[active])?.classList.add('active');
+  }
+}
+
+window.addEventListener('scroll', () => {
+  updateProgress();
+  updateBackTop();
+  detectActiveSection();
+}, { passive: true });
+
+// Init
+updateProgress();
+updateBackTop();
+</script>
+</body>
+</html>
