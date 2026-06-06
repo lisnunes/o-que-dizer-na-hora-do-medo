@@ -3,7 +3,7 @@ export default async (request, context) => {
   const cookies = request.headers.get("cookie") || "";
 
   // 1. Verifica se o navegador já possui o "carimbo" de acesso liberado
-  const temCarimboAcesso = cookies.includes("oquedizer_autorizado=true");
+  const temCarimboAcesso = cookies.includes("o-que-dizer_autorizado=true");
 
   // 2. Verifica se a URL traz a chave secreta
   const chaveAcesso = url.searchParams.get("acesso");
@@ -25,7 +25,7 @@ export default async (request, context) => {
       headers: {
         Location: url.toString(),
         "Set-Cookie":
-          "oquedizer_autorizado=true; Path=/; SameSite=Lax; HttpOnly",
+          "o-que-dizer_autorizado=true; Path=/; SameSite=Lax; HttpOnly",
       },
     });
   }
